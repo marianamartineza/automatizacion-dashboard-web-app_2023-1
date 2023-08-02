@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
-import { getAnalytics } from 'firebase/analytics'
+import { getDatabase, onValue, ref, set } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,4 +20,23 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const FirebaseApp = initializeApp(firebaseConfig)
-const analytics = getAnalytics(FirebaseApp)
+
+// Initialize Realtime Database and get a reference to the service
+const database = getDatabase(FirebaseApp);
+
+function writeUserData(userId, name, email, imageUrl) {
+  const db = getDatabase(FirebaseApp);
+  set(ref(db, 'users/' + userId), {
+    username: name,
+    email: email,
+    profile_picture : imageUrl
+  });
+}
+
+const db = getDatabase();
+let postId
+const starCountRef = ref(db, 'posts/' + postId + '/starCount');
+onValue(starCountRef, (snapshot) => {
+  const data = snapshot.val();
+  //updateStarCount(postElement, data);
+});
