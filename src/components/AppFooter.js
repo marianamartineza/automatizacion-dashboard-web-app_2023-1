@@ -12,7 +12,7 @@ const AppFooter = () => {
       </div>
       <div className="ms-auto">
         <p>Mariana Martinez Araque CI 28.396.879</p>
-        <p>Juan Diego Gutierrez CI 27.</p>
+        <p>Juan Diego Gutierrez CI 27.675.445</p>
       </div>
     </CFooter>
   )

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
+  CCardFooter,
   CCardHeader,
   CCol,
   CProgress,
@@ -22,6 +23,8 @@ import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import ModalDatabase from 'src/components/ModalDatabase'
 import { FirebaseApp, firebaseConfig } from 'src/firebase/FirebaseApp'
 import { getDatabase, onValue, ref } from 'firebase/database'
+import { CChart } from '@coreui/react-chartjs'
+import { getStyle } from '@coreui/utils'
 
 let total_vendidos = 0
 
@@ -78,10 +81,23 @@ const Dashboard = () => {
 
   useEffect(() => {
     load_data()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function calcular_porcentaje(cantidad, total) {
     return (cantidad * 100) / total
+  }
+
+  function generarNuevoColor() {
+    var simbolos, color
+    simbolos = '0123456789ABCDEF'
+    color = '#'
+
+    for (var i = 0; i < 6; i++) {
+      color = color + simbolos[Math.floor(Math.random() * 16)]
+    }
+
+    return color
   }
 
   return (
@@ -146,62 +162,93 @@ const Dashboard = () => {
             </CCol>
           </CRow>
           <CRow>
-            <CCard className="mb-4">
-              <CCardHeader>Datos ventas por Modelos de procesadores</CCardHeader>
-              <CCardBody>
-                <h2 className="text-center p-3">Datos ventas por Modelos de procesadores</h2>
-                <br></br>
-                <CRow>
-                  <CTable align="middle" className="mb-0 border" hover responsive>
-                    <CTableHead color="light">
-                      <CTableRow>
-                        <CTableHeaderCell className="text-center">nombre</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center">nucleos</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center">velocidad</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center">porcentaje</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center">64bits</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center">cantidad</CTableHeaderCell>
-                      </CTableRow>
-                    </CTableHead>
-                    <CTableBody>
-                      {procesadores.map((item, index) => (
-                        <CTableRow v-for="item in tableItems" key={index}>
-                          <CTableDataCell className="text-center">
-                            <div>{item.nombre}</div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item.nucleos}</div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item.velocidad}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div className="clearfix">
-                              <div className="float-start">
-                                <strong>{item.porcentaje}%</strong>
-                              </div>
-                            </div>
-                            <CProgress thin color="info" value={item.porcentaje} />
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            {item.acepta64bits ? (
-                              <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                              <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div className="small text-font-bold">
-                              <strong>{item.cantidad}</strong>
-                            </div>
-                          </CTableDataCell>
+            <CCol xs>
+              <CCard className="mb-4">
+                <CCardHeader>Datos ventas por Modelos de procesadores</CCardHeader>
+                <CCardBody>
+                  <h2 className="text-center p-3">Datos ventas por Modelos de procesadores</h2>
+                  <br></br>
+                  <CRow>
+                    <CTable align="middle" className="mb-0 border" hover responsive>
+                      <CTableHead color="light">
+                        <CTableRow>
+                          <CTableHeaderCell className="text-center">nombre</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center">nucleos</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center">velocidad</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center">porcentaje</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center">64bits</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center">cantidad</CTableHeaderCell>
                         </CTableRow>
-                      ))}
-                    </CTableBody>
-                  </CTable>
-                </CRow>
-              </CCardBody>
-            </CCard>
+                      </CTableHead>
+                      <CTableBody>
+                        {procesadores.map((item, index) => (
+                          <CTableRow v-for="item in tableItems" key={index}>
+                            <CTableDataCell className="text-center">
+                              <div>{item.nombre}</div>
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <div>{item.nucleos}</div>
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <div>{item.velocidad}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div className="clearfix">
+                                <div className="float-start">
+                                  <strong>{item.porcentaje}%</strong>
+                                </div>
+                              </div>
+                              <CProgress thin color="info" value={item.porcentaje} />
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              {item.acepta64bits ? (
+                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+                              ) : (
+                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+                              )}
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <div className="small text-font-bold">
+                                <strong>{item.cantidad}</strong>
+                              </div>
+                            </CTableDataCell>
+                          </CTableRow>
+                        ))}
+                      </CTableBody>
+                    </CTable>
+                  </CRow>
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs>
+              <CCard>
+                <CCardHeader>Grafico porcentaje de ventas por Modelos de procesadores</CCardHeader>
+                <CCardBody>
+                  <CChart
+                    type="doughnut"
+                    data={{
+                      labels: procesadores.map((procesador) => procesador.nombre),
+                      datasets: [
+                        {
+                          backgroundColor: procesadores.map((procesador) => generarNuevoColor()),
+                          data: procesadores.map((procesador) => procesador.porcentaje),
+                        },
+                      ],
+                    }}
+                    options={{
+                      plugins: {
+                        legend: {
+                          labels: {
+                            color: getStyle('--cui-body-color'),
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </CCardBody>
+                <CCardFooter></CCardFooter>
+              </CCard>
+            </CCol>
           </CRow>
         </>
       )}
