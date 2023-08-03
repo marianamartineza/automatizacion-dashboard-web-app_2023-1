@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
   CProgress,
@@ -175,6 +174,7 @@ const Dashboard = () => {
                           <CTableHeaderCell className="text-center">nombre</CTableHeaderCell>
                           <CTableHeaderCell className="text-center">nucleos</CTableHeaderCell>
                           <CTableHeaderCell className="text-center">velocidad</CTableHeaderCell>
+                          <CTableHeaderCell className="text-center">tamaño</CTableHeaderCell>
                           <CTableHeaderCell className="text-center">porcentaje</CTableHeaderCell>
                           <CTableHeaderCell className="text-center">64bits</CTableHeaderCell>
                           <CTableHeaderCell className="text-center">cantidad</CTableHeaderCell>
@@ -191,6 +191,9 @@ const Dashboard = () => {
                             </CTableDataCell>
                             <CTableDataCell className="text-center">
                               <div>{item.velocidad}</div>
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <div>{item.tamaño}</div>
                             </CTableDataCell>
                             <CTableDataCell>
                               <div className="clearfix">
@@ -246,7 +249,6 @@ const Dashboard = () => {
                     }}
                   />
                 </CCardBody>
-                <CCardFooter></CCardFooter>
               </CCard>
             </CCol>
           </CRow>
