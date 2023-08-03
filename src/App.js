@@ -1,7 +1,6 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
-import { FirebaseApp } from 'src/firebase/FirebaseApp'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -22,7 +21,6 @@ class App extends Component {
   render() {
     return (
       <>
-        {console.log(FirebaseApp)}
         <HashRouter>
           <Suspense fallback={loading}>
             <Routes>
